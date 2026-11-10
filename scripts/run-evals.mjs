@@ -57,15 +57,9 @@ async function runScenario(scenario) {
       break
     }
 
-    const { reply, lead: updatedLead, completion: updatedCompletion, _debug } = data
+    const { reply, lead: updatedLead, completion: updatedCompletion } = data
     lead = updatedLead || lead
     if (updatedCompletion) completion = updatedCompletion
-
-    if (_debug) {
-      for (const e of _debug) {
-        console.log(`  [iter ${e.i}] stop=${e.stop_reason} blocks=[${e.blocks.join(', ')}]`)
-      }
-    }
 
     console.log(`A: ${reply}`)
     agentReplies.push(reply || '')

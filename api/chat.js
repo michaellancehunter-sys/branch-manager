@@ -23,9 +23,8 @@ export default async function handler(req, res) {
   let workingLead = inputLead ? { ...inputLead } : {}
   let completion = null
   let lastReply = ''
-  const _debug = []
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 6; i++) {
     const system = loadSystemPrompt({ lead: workingLead, openingMessage })
 
     let response
@@ -41,12 +40,6 @@ export default async function handler(req, res) {
       console.error('Anthropic API error:', err.message)
       return res.status(502).json({ error: err.message })
     }
-
-    _debug.push({
-      i,
-      stop_reason: response.stop_reason,
-      blocks: response.content.map(b => b.type === 'tool_use' ? `tool_use(${b.name})` : b.type),
-    })
 
     const textBlocks = response.content.filter(b => b.type === 'text').map(b => b.text)
     const textReply = textBlocks.join('')
@@ -96,5 +89,22 @@ export default async function handler(req, res) {
     workingMessages.push({ role: 'user', content: toolResults })
   }
 
-  res.status(200).json({ reply: lastReply, lead: workingLead, completion, _debug })
+  if (!lastReply) {
+    const system = loadSystemPrompt({ lead: workingLead, openingMessage })
+    try {
+      const fallback = await anthropic.messages.create({
+        model: 'claude-sonnet-5-5',
+        max_tokens: 1024,
+        system,
+        tools,
+        tool_choice: { type: 'none' },
+        messages: workingMessages,
+      })
+      lastReply = fallback.content.filter(b => b.type === 'text').map(b => b.text).join('')
+    } catch (err) {
+      console.error('Fallback Anthropic API error:', err.message)
+    }
+  }
+
+  res.status(200).json({ reply: lastReply, lead: workingLead, completion })
 }
