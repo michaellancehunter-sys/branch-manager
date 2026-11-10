@@ -7,7 +7,20 @@ const scenarios = JSON.parse(readFileSync(join(__dirname, '../evals/scenarios.js
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
 const args = process.argv.slice(2)
-const toRun = args.length > 0 ? scenarios.filter(s => args.includes(s.id)) : scenarios
+const writeFlag = args.includes('--write')
+const scenarioIds = args.filter(a => !a.startsWith('-'))
+const toRun = scenarioIds.length > 0 ? scenarios.filter(s => scenarioIds.includes(s.id)) : scenarios
+
+let openingMessage = ''
+if (writeFlag) {
+  try {
+    const r = await fetch(`${BASE_URL}/api/opening?mode=business_hours`)
+    const data = await r.json()
+    openingMessage = data.message || ''
+  } catch (err) {
+    console.error('Could not fetch opening message:', err.message)
+  }
+}
 
 async function runScenario(scenario) {
   const { id, name, turns, expect } = scenario
@@ -19,9 +32,12 @@ async function runScenario(scenario) {
   let lead = {}
   let completion = null
   const agentReplies = []
+  const transcript = []
+  if (openingMessage) transcript.push({ role: 'agent', text: openingMessage })
 
   for (const turn of turns) {
     messages.push({ role: 'user', content: turn })
+    transcript.push({ role: 'customer', text: turn })
     console.log(`C: ${turn}`)
 
     let data
@@ -48,6 +64,7 @@ async function runScenario(scenario) {
     console.log(`A: ${reply}`)
     agentReplies.push(reply || '')
     messages.push({ role: 'assistant', content: reply || '' })
+    transcript.push({ role: 'agent', text: reply || '' })
 
     if (completion) break
   }
@@ -56,6 +73,28 @@ async function runScenario(scenario) {
   console.log(JSON.stringify(lead, null, 2))
   console.log('\nCompletion:')
   console.log(completion ? JSON.stringify(completion, null, 2) : 'null')
+
+  if (writeFlag && completion) {
+    const chatId = `eval-${id}-${Date.now()}`
+    try {
+      const r = await fetch(`${BASE_URL}/api/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chatId,
+          lead,
+          transcript,
+          completedBy: 'agent',
+          summary: completion.summary,
+          reason: completion.reason,
+        }),
+      })
+      const result = await r.json()
+      console.log('\n/api/complete:', JSON.stringify(result))
+    } catch (err) {
+      console.error('\n/api/complete error:', err.message)
+    }
+  }
 
   const checks = []
 
