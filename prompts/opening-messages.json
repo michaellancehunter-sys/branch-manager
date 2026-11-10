@@ -1,0 +1,4 @@
+{
+  "business_hours": "Hi, this is {{BUSINESS_NAME}}. Sorry we missed your call; we're out on a job right now and will call you back as soon as we finish with a customer. Can you tell us your name and a bit about what's going on?",
+  "after_hours": "Hi, this is {{BUSINESS_NAME}}. Sorry we missed your call; our office is closed for the day, but we handle tree emergencies 24/7 and will call you back as soon as possible. Can you tell us your name and a bit about what's going on?"
+}

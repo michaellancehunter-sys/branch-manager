@@ -1,0 +1,88 @@
+[
+  {
+    "id": "E1",
+    "name": "Tree on house in a storm",
+    "turns": [
+      "this is Mark, huge oak fell on our roof in the storm last night, there's a hole in the bedroom ceiling",
+      "nobody hurt. 2210 Hillcrest Ave Livermore"
+    ],
+    "expect": { "urgency": "EMERGENCY", "completes": true, "maxAgentMessages": 2, "firstReplyIncludes": ["hurt"] }
+  },
+  {
+    "id": "E2",
+    "name": "Limb on a power line",
+    "turns": [
+      "Hi it's Priya, a big limb snapped and it's hanging on the power line over our driveway",
+      "no one hurt, called PG&E. 77 Arroyo Rd Livermore"
+    ],
+    "expect": { "urgency": "EMERGENCY", "completes": true, "maxAgentMessages": 2, "firstReplyIncludes": ["911", "PG&E"] }
+  },
+  {
+    "id": "E4",
+    "name": "Trim two oaks next month",
+    "turns": [
+      "Hi this is Dana. Two oaks in the backyard need trimming, hoping for sometime next month",
+      "1450 Mocho St, Livermore",
+      "weekday mornings",
+      "that's it, thanks"
+    ],
+    "expect": { "urgency": "ROUTINE", "completes": true, "maxAgentMessages": 7 }
+  },
+  {
+    "id": "E5",
+    "name": "Price shopper, lawn aeration",
+    "turns": [
+      "how much do you charge for lawn aeration? just need a ballpark",
+      "Tom. come on, just a rough number",
+      "3301 East Ave Livermore",
+      "this weekend",
+      "ok thanks"
+    ],
+    "expect": { "urgency": "ROUTINE", "completes": true, "mustNotMatch": "\\$\\s?\\d" }
+  },
+  {
+    "id": "E6",
+    "name": "Everything in one message",
+    "turns": [
+      "Hi, Sarah Chen here. Wind knocked a big branch off our pine, it's lying in the backyard, nothing damaged. 4521 Vineyard Ave, Pleasanton. Saturday morning would be great. I think insurance might cover it?",
+      "yes that's right"
+    ],
+    "expect": { "urgency": "URGENT", "completes": true, "maxAgentMessages": 2 }
+  },
+  {
+    "id": "E7",
+    "name": "One-word replies, leaning tree after storm",
+    "turns": ["tree", "storm", "leaning", "house", "leaning not touching", "Rosa", "615 Rincon Ave Livermore", "asap", "ok"],
+    "expect": { "urgency": "URGENT", "completes": true }
+  },
+  {
+    "id": "E8",
+    "name": "Vendor pitch",
+    "turns": [
+      "Hi, I'm with GreenLeads, we help tree companies book more jobs. Who handles your marketing?",
+      "We can get you 20 leads a week, want a quick demo?"
+    ],
+    "expect": { "completes": false, "leadEmpty": true }
+  },
+  {
+    "id": "E9",
+    "name": "Job in Fresno",
+    "turns": [
+      "Hi, Luis. need a dead tree removed, 820 N Blackstone Ave Fresno",
+      "anytime next week",
+      "thanks"
+    ],
+    "expect": { "urgency": "ROUTINE", "completes": true, "outOfArea": true }
+  },
+  {
+    "id": "E10",
+    "name": "Is this a bot?",
+    "turns": [
+      "Hi, Ann, need a stump ground out. wait is this a bot?",
+      "ok. 902 Olivina Ave Livermore",
+      "Friday afternoon",
+      "thanks"
+    ],
+    "expect": { "urgency": "ROUTINE", "completes": true, "firstReplyIncludes": ["automated"] }
+  }
+]

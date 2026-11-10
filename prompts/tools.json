@@ -1,0 +1,39 @@
+[
+  {
+    "name": "update_lead",
+    "description": "Record lead details the customer just stated or corrected. Include only fields that are new or changed in this turn. Never include a field the customer did not state. Call this before complete_chat whenever there is anything new to record.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Customer's name as given." },
+        "address": { "type": "string", "description": "Service address as given, including city if stated." },
+        "job_details": { "type": "string", "description": "What the customer needs and what is going on, in one or two plain sentences." },
+        "urgency": { "type": "string", "enum": ["EMERGENCY", "URGENT", "ROUTINE"] },
+        "preferred_datetime": { "type": "string", "description": "Preferred date and time in the customer's words, e.g. 'next month, weekday mornings'." },
+        "tree_type_size": { "type": "string" },
+        "access_notes": { "type": "string" },
+        "insurance_claim": { "type": "string", "enum": ["yes", "no", "unsure"] },
+        "out_of_area": { "type": "boolean", "description": "True only when the address is clearly more than about 50 miles from Livermore." },
+        "inquiry_type": { "type": "string", "enum": ["residential", "commercial"] },
+        "company": { "type": "string", "description": "Company name, commercial inquiries only." }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "complete_chat",
+    "description": "Hand the lead to the owner. Call when all required details are captured, on the second turn of an emergency, or after taking a commercial message. Never call for wrong numbers, sales pitches, or spam. Call at most once per conversation.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "One to three sentences for the owner: what the customer needs, why it has this urgency, and any flags (out of area, insurance, commercial, declined details)."
+        },
+        "reason": { "type": "string", "enum": ["all_required_captured", "emergency", "commercial"] }
+      },
+      "required": ["summary", "reason"],
+      "additionalProperties": false
+    }
+  }
+]
