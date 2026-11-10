@@ -23,6 +23,7 @@ export default async function handler(req, res) {
   let workingLead = inputLead ? { ...inputLead } : {}
   let completion = null
   let lastReply = ''
+  const _debug = []
 
   for (let i = 0; i < 4; i++) {
     const system = loadSystemPrompt({ lead: workingLead, openingMessage })
@@ -40,6 +41,12 @@ export default async function handler(req, res) {
       console.error('Anthropic API error:', err.message)
       return res.status(502).json({ error: err.message })
     }
+
+    _debug.push({
+      i,
+      stop_reason: response.stop_reason,
+      blocks: response.content.map(b => b.type === 'tool_use' ? `tool_use(${b.name})` : b.type),
+    })
 
     const textBlocks = response.content.filter(b => b.type === 'text').map(b => b.text)
     const textReply = textBlocks.join('')
@@ -89,5 +96,5 @@ export default async function handler(req, res) {
     workingMessages.push({ role: 'user', content: toolResults })
   }
 
-  res.status(200).json({ reply: lastReply, lead: workingLead, completion })
+  res.status(200).json({ reply: lastReply, lead: workingLead, completion, _debug })
 }
