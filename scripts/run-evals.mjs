@@ -138,6 +138,11 @@ async function runScenario(scenario) {
     check('lead is empty', Object.keys(lead).length === 0)
   }
 
+  if (expect.jobDetailsIncludes !== undefined) {
+    const val = (lead.job_details || '').toLowerCase()
+    check(`job_details includes "${expect.jobDetailsIncludes}"`, val.includes(expect.jobDetailsIncludes.toLowerCase()))
+  }
+
   const allShort = agentReplies.length > 0 && agentReplies.every(r => r.length <= 300)
   check('all replies <= 300 chars', allShort)
 

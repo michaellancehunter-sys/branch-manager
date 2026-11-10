@@ -45,9 +45,9 @@
     "name": "Everything in one message",
     "turns": [
       "Hi, Sarah Chen here. Wind knocked a big branch off our pine, it's lying in the backyard, nothing damaged. 4521 Vineyard Ave, Pleasanton. Saturday morning would be great. I think insurance might cover it?",
-      "yes that's right"
+      "nope, that's everything"
     ],
-    "expect": { "urgency": "URGENT", "completes": true, "maxAgentMessages": 2 }
+    "expect": { "urgency": "URGENT", "completes": true, "maxAgentMessages": 3 }
   },
   {
     "id": "E7",
@@ -84,5 +84,15 @@
       "thanks"
     ],
     "expect": { "urgency": "ROUTINE", "completes": true, "firstReplyIncludes": ["automated"] }
+  },
+  {
+    "id": "E11",
+    "name": "Adds more after check-in",
+    "turns": [
+      "Hi this is Dana, two oaks at 1450 Mocho St in Livermore need trimming next month",
+      "actually yes, there's also a stump out front I'd like ground down",
+      "no that's it, thanks"
+    ],
+    "expect": { "urgency": "ROUTINE", "completes": true, "jobDetailsIncludes": "stump" }
   }
 ]
