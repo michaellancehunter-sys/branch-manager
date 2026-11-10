@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "vercel dev",
+    "dev:local": "node scripts/dev-server.mjs",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "check:dashes": "node scripts/check-dashes.mjs",
-    "eval": "node evals/run.mjs"
+    "eval": "node scripts/run-evals.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
