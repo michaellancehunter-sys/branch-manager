@@ -1,6 +1,14 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { computeMissing } from './_lib/lead.js'
 
+const FIELD_LABELS = {
+  name: 'Name',
+  address: 'Address',
+  job_details: 'Job details',
+  urgency: 'Urgency',
+  preferred_datetime: 'Preferred date/time',
+}
+
 const anthropic = new Anthropic()
 
 function buildOptionalFields(lead) {
@@ -56,7 +64,7 @@ export default async function handler(req, res) {
     phone: process.env.DEMO_CALLER_PHONE || '',
     optionalFields: buildOptionalFields(lead),
     summary,
-    missingFields: computeMissing(lead, reason).join(', '),
+    missingFields: computeMissing(lead, reason).map(f => FIELD_LABELS[f] || f).join(', '),
     completedBy: completedBy || '',
     transcript: formatTranscript(transcript),
   }
