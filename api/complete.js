@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { computeMissing } from './_lib/lead.js'
+import { sanitize } from './_lib/text.js'
 
 const FIELD_LABELS = {
   name: 'Name',
@@ -49,6 +50,8 @@ export default async function handler(req, res) {
       summary = 'Marked complete manually; no summary available.'
     }
   }
+
+  summary = sanitize(summary)
 
   const webhookUrl = process.env.SHEET_WEBHOOK_URL
   if (!webhookUrl) return res.status(502).json({ error: 'SHEET_WEBHOOK_URL not configured' })

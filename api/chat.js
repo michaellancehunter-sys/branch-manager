@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { loadSystemPrompt, loadTools, getOpening } from './_lib/prompt.js'
 import { mergeLead, computeMissing } from './_lib/lead.js'
+import { sanitize } from './_lib/text.js'
 
 const anthropic = new Anthropic()
 
@@ -106,5 +107,5 @@ export default async function handler(req, res) {
     }
   }
 
-  res.status(200).json({ reply: lastReply, lead: workingLead, completion })
+  res.status(200).json({ reply: sanitize(lastReply), lead: workingLead, completion })
 }

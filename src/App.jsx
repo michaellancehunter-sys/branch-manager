@@ -8,6 +8,7 @@ export default function App() {
     <div className="min-h-screen bg-stone-100 flex flex-col">
       <header className="text-center pt-6 pb-2 px-4">
         <h1 className="text-2xl font-bold text-green-900 tracking-tight">Leaf a Message</h1>
+        <p className="text-xs text-stone-400 mt-0.5">by Branch Manager</p>
         <p className="text-sm text-stone-500 mt-1">
           Missed-call text-back for Tri-Valley Tree Care (Phase 1 prototype)
         </p>
