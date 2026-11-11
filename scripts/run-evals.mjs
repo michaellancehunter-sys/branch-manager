@@ -146,6 +146,10 @@ async function runScenario(scenario) {
   const allShort = agentReplies.length > 0 && agentReplies.every(r => r.length <= 300)
   check('all replies <= 300 chars', allShort)
 
+  const colonSemiRe = /;|:(?!\d)/
+  const noColonSemi = agentReplies.every(r => !colonSemiRe.test(r))
+  check('no reply contains colon/semicolon (except times)', noColonSemi)
+
   const passed = checks.filter(c => c.passed).length
   const total = checks.length
   console.log(`\n${passed}/${total} checks passed`)
